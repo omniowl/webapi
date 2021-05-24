@@ -5,10 +5,7 @@ using Interfaces.Services;
 using Models.DomainModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Repository.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -168,12 +165,12 @@ namespace BookApp.Controllers
                 JsonMediaTypeFormatter formatter = new JsonMediaTypeFormatter();
                 JsonSerializerSettings json = formatter.SerializerSettings;
 
-                json.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
-                json.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
-                json.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-                json.Formatting = Newtonsoft.Json.Formatting.Indented;
+                json.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                json.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                json.NullValueHandling = NullValueHandling.Ignore;
+                json.Formatting = Formatting.Indented;
                 json.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                json.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                json.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 return formatter;
             }
 
