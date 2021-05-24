@@ -1,11 +1,9 @@
 ﻿using BookApp.Helper;
-using Interfaces.Repositories;
 using Interfaces.Services;
 using Models.DomainModels;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -14,7 +12,7 @@ using System.Web.Http.Cors;
 
 namespace BookApp.Controllers
 {
-    [System.Web.Http.RoutePrefix("api/account")]
+    [RoutePrefix("api/account")]
     [EnableCors(origins: "*", headers: "accept,Auth-Key", methods: "*")]
     public class UserController : ApiController
     {
@@ -36,7 +34,7 @@ namespace BookApp.Controllers
                     ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
-            var user = UserService.GetUserById(userId);
+            User user = UserService.GetUserById(userId); // Changed "var" to "User" to be explicit.
             if (user != null)
                 return Request.CreateResponse(HttpStatusCode.OK, user, JsonFormatter);
             else
@@ -81,9 +79,9 @@ namespace BookApp.Controllers
                     ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
-            var user = UserService.GetUserById(userId);
+            User user = UserService.GetUserById(userId); // Changed "var" to "User" to be explicit.
             if (user != null) {
-                var result = UserService.DeleteUser(user);
+                bool result = UserService.DeleteUser(user); // Changed "var" to "bool" to be explicit.
                 if (result)
                     return Request.CreateResponse(HttpStatusCode.OK, "Book was deleted", JsonFormatter);
                 else
@@ -94,15 +92,15 @@ namespace BookApp.Controllers
 
         protected JsonMediaTypeFormatter JsonFormatter {
             get {
-                var formatter = new JsonMediaTypeFormatter();
-                var json = formatter.SerializerSettings;
+                JsonMediaTypeFormatter formatter = new JsonMediaTypeFormatter();
+                JsonSerializerSettings json = formatter.SerializerSettings;
 
-                json.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
-                json.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
-                json.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-                json.Formatting = Newtonsoft.Json.Formatting.Indented;
+                json.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                json.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                json.NullValueHandling = NullValueHandling.Ignore;
+                json.Formatting = Formatting.Indented;
                 json.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                json.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                json.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 return formatter;
             }
 
