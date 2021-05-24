@@ -1,7 +1,8 @@
-﻿using BookApp.Helper;
+using BookApp.Helper;
 using Interfaces.Repositories;
 using Interfaces.Services;
 using Models.DomainModels;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Repository.Repositories;
 using System;
@@ -159,14 +160,12 @@ namespace BookApp.Controllers
                 throw new APIDataException(1, "No book found", HttpStatusCode.NotFound);
         }
 
-
-
         protected JsonMediaTypeFormatter JsonFormatter
         {
             get
             {
-                var formatter = new JsonMediaTypeFormatter();
-                var json = formatter.SerializerSettings;
+                JsonMediaTypeFormatter formatter = new JsonMediaTypeFormatter();
+                JsonSerializerSettings json = formatter.SerializerSettings;
 
                 json.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
                 json.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
