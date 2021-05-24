@@ -10,10 +10,6 @@ namespace BookApp.Helper {
     /// </summary>
     public interface IAPIException {
         /// <summary>
-        /// ErrorCode
-        /// </summary>
-        int ErrorCode { get; set; }
-        /// <summary>
         /// ErrorDescription
         /// </summary>
         string ErrorDescription { get; set; }

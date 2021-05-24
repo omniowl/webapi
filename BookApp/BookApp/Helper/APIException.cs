@@ -14,15 +14,9 @@ namespace BookApp.Helper {
     public class APIException : Exception, IAPIException {
         #region Public Serializable properties.
         /// <summary>
-        /// Error Code
-        /// </summary>
-        [DataMember]
-        public int ErrorCode { get; set; }
-        /// <summary>
         /// 
         /// </summary>
         [DataMember]
-
         public string ErrorDescription { get; set; }
         /// <summary>
         /// 

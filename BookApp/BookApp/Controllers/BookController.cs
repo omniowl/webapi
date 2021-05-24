@@ -38,7 +38,6 @@ namespace BookApp.Controllers
             if (bookId == null || bookId == Guid.Empty)
                 throw new APIException()
                 {
-                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid bookId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -62,7 +61,6 @@ namespace BookApp.Controllers
             if (userId == null || userId == Guid.Empty)
                 throw new APIException()
                 {
-                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -80,7 +78,6 @@ namespace BookApp.Controllers
             if (book == null)
                 throw new APIException()
                 {
-                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid book object. Object can't be null.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -104,14 +101,12 @@ namespace BookApp.Controllers
             if (book == null)
                 throw new APIException()
                 {
-                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid book object. Object can't be null.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
             if (userId == null || userId == Guid.Empty)
                 throw new APIException()
                 {
-                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -131,7 +126,6 @@ namespace BookApp.Controllers
             if (book == null)
                 throw new APIException()
                 {
-                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid book object. Object can't be null.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -149,7 +143,6 @@ namespace BookApp.Controllers
             if (bookId == null || bookId == Guid.Empty)
                 throw new APIException()
                 {
-                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid bookId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };

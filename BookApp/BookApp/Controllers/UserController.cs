@@ -33,7 +33,6 @@ namespace BookApp.Controllers
         public HttpResponseMessage GetUserById(Guid userId) {
             if (userId == null || userId == Guid.Empty)
                 throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -49,7 +48,6 @@ namespace BookApp.Controllers
         public HttpResponseMessage SaveUser([FromBody]User user) {
             if (user == null)
                 throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid user object. Object can't be null.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -65,7 +63,6 @@ namespace BookApp.Controllers
         public HttpResponseMessage UpdateUser([FromBody]User user) {
             if (user == null)
                 throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid user object. Object can't be null.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -81,7 +78,6 @@ namespace BookApp.Controllers
         public HttpResponseMessage DeleteUser([FromBody]Guid userId) {
             if (userId == null || userId == Guid.Empty)
                 throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };

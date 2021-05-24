@@ -28,7 +28,7 @@ namespace BookApp.ActionFilters {
             } else if (exceptionType == typeof(APIException)) {
                 var webapiException = context.Exception as APIException;
                 if (webapiException != null)
-                    throw new HttpResponseException(context.Request.CreateResponse(webapiException.HttpStatus, new ServiceStatus() { StatusCode = webapiException.ErrorCode, StatusMessage = webapiException.ErrorDescription, ReasonPhrase = webapiException.ReasonPhrase }));
+                    throw new HttpResponseException(context.Request.CreateResponse(webapiException.HttpStatus, new ServiceStatus() { StatusCode = (int) webapiException.HttpStatus, StatusMessage = webapiException.ErrorDescription, ReasonPhrase = webapiException.ReasonPhrase }));
             } else if (exceptionType == typeof(APIDataException)) {
                 var dataException = context.Exception as APIDataException;
                 if (dataException != null)
