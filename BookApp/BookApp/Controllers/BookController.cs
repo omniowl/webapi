@@ -1,4 +1,4 @@
-using BookApp.Helper;
+﻿using BookApp.Helper;
 using Interfaces.Services;
 using Models.DomainModels;
 using Newtonsoft.Json.Serialization;
@@ -73,7 +73,7 @@ namespace BookApp.Controllers
                 throw new APIDataException(3, "Error Updating Book", HttpStatusCode.NotFound);
         }
 
-        [HttpPost]
+        [HttpDelete] // This was HttpPost, now HttpDelete. Stays consistent with HTTP verb usage.
         [Route("DeleteBook")]
         public HttpResponseMessage DeleteBook([FromBody]Guid bookId) {
             if (bookId == null || bookId == Guid.Empty)

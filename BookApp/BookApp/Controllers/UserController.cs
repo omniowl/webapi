@@ -78,7 +78,7 @@ namespace BookApp.Controllers
                 throw new APIDataException(6, "Error Updating User", HttpStatusCode.NotFound);
         }
 
-        [HttpPost]
+        [HttpDelete] // This was HttpPost, now HttpDelete. Stays consistent with HTTP verb usage.
         [Route("DeleteUser")]
         public HttpResponseMessage DeleteUser([FromBody]Guid userId) {
             if (userId == null || userId == Guid.Empty)
