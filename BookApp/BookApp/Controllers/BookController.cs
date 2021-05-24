@@ -1,4 +1,4 @@
-﻿using BookApp.Helper;
+using BookApp.Helper;
 using Interfaces.Services;
 using Models.DomainModels;
 using Newtonsoft.Json.Serialization;
@@ -13,7 +13,7 @@ using System.Web.Http.Cors;
 
 namespace BookApp.Controllers
 {
-    [System.Web.Http.RoutePrefix("api/books")]
+    [RoutePrefix("api/books")]
     [EnableCors(origins: "*", headers: "accept,Auth-Key", methods: "*")]
     public class BookController : ApiController
     {
