@@ -1,7 +1,9 @@
 ﻿using BookApp.Helper;
+using Interfaces.Repositories;
 using Interfaces.Services;
 using Models.DomainModels;
 using Newtonsoft.Json.Serialization;
+using Repository.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,20 +19,26 @@ namespace BookApp.Controllers
     [EnableCors(origins: "*", headers: "accept,Auth-Key", methods: "*")]
     public class BookController : ApiController
     {
+        private IBookRepository BookRepository;
         private IBookService BookService;
 
-        public BookController() {
+        public BookController()
+        {
         }
-        public BookController(IBookService bookService) {
+        public BookController(IBookRepository bookRepository, IBookService bookService)
+        {
+            BookRepository = bookRepository;
             BookService = bookService;
         }
 
         [HttpGet]
         [Route("GetBookById")]
-        public HttpResponseMessage GetBookById(Guid bookId) {
+        public HttpResponseMessage GetBookById(Guid bookId)
+        {
             if (bookId == null || bookId == Guid.Empty)
-                throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
+                throw new APIException()
+                {
+                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid bookId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -41,12 +49,38 @@ namespace BookApp.Controllers
                 throw new APIDataException(1, "No book found", HttpStatusCode.NotFound);
         }
 
+        /*
+         * Moved this to the BookController from the UserController seeing as it has nothing to do
+         * with the transformation or retrieval of User data. It only retrieves books from a given account,
+         * which appears to be a responsibility better suited for the BookController.
+         * This is also more in-line with the BookController given the GetBookById method.
+         */
+        [HttpGet]
+        [Route("GetUserBooks")]
+        public HttpResponseMessage GetUserBooks(Guid userId)
+        {
+            if (userId == null || userId == Guid.Empty)
+                throw new APIException()
+                {
+                    ErrorCode = (int)HttpStatusCode.BadRequest,
+                    ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
+                    HttpStatus = HttpStatusCode.BadRequest
+                };
+            var books = BookService.GetBooksByUserId(userId);
+            if (books != null)
+                return Request.CreateResponse(HttpStatusCode.OK, books, JsonFormatter);
+            else
+                throw new APIDataException(1, "No books found", HttpStatusCode.NotFound);
+        }
+
         [HttpPost]
         [Route("CreateBook")]
-        public HttpResponseMessage SaveBook([FromBody]Book book) {
+        public HttpResponseMessage SaveBook([FromBody]Book book)
+        {
             if (book == null)
-                throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
+                throw new APIException()
+                {
+                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid book object. Object can't be null.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -57,12 +91,47 @@ namespace BookApp.Controllers
                 throw new APIDataException(2, "Error Saving Book", HttpStatusCode.NotFound);
         }
 
+        /*
+         * Moved this to the BookController from the UserController. Seeing as this method doesn't actually handle
+         * user information, but only ties a book to a UserId, it would make more sense to let the BookController handle
+         * this interaction rather than the UserController.
+         * The Book Controller can already create books without an attached UserId, so it feels more fitting.
+         */
+        [HttpPost]
+        [Route("CreateUserBook")]
+        public HttpResponseMessage SaveBook([FromUri]Guid userId, [FromBody]Book book)
+        {
+            if (book == null)
+                throw new APIException()
+                {
+                    ErrorCode = (int)HttpStatusCode.BadRequest,
+                    ErrorDescription = "Bad Request. Provide valid book object. Object can't be null.",
+                    HttpStatus = HttpStatusCode.BadRequest
+                };
+            if (userId == null || userId == Guid.Empty)
+                throw new APIException()
+                {
+                    ErrorCode = (int)HttpStatusCode.BadRequest,
+                    ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
+                    HttpStatus = HttpStatusCode.BadRequest
+                };
+            BookRepository.Add(book);
+            BookRepository.SaveChanges();
+            var result = BookRepository.GetBookByID(book.Id);
+            if (result != null)
+                return Request.CreateResponse(HttpStatusCode.OK, result, JsonFormatter);
+            else
+                throw new APIDataException(2, "Error Saving Book", HttpStatusCode.NotFound);
+        }
+
         [HttpPut]
         [Route("UpdateBook")]
-        public HttpResponseMessage UpdateBook([FromBody]Book book) {
+        public HttpResponseMessage UpdateBook([FromBody]Book book)
+        {
             if (book == null)
-                throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
+                throw new APIException()
+                {
+                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid book object. Object can't be null.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
@@ -75,28 +144,34 @@ namespace BookApp.Controllers
 
         [HttpDelete] // This was HttpPost, now HttpDelete. Stays consistent with HTTP verb usage.
         [Route("DeleteBook")]
-        public HttpResponseMessage DeleteBook([FromBody]Guid bookId) {
+        public HttpResponseMessage DeleteBook([FromBody]Guid bookId)
+        {
             if (bookId == null || bookId == Guid.Empty)
-                throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
+                throw new APIException()
+                {
+                    ErrorCode = (int)HttpStatusCode.BadRequest,
                     ErrorDescription = "Bad Request. Provide valid bookId guid. Can't be empty guid.",
                     HttpStatus = HttpStatusCode.BadRequest
                 };
             var book = BookService.GetBookById(bookId);
-            if (book != null) {
+            if (book != null)
+            {
                 var result = BookService.DeleteBook(book);
                 if (result)
                     return Request.CreateResponse(HttpStatusCode.OK, "Book was deleted", JsonFormatter);
                 else
                     throw new APIDataException(3, "Error Deleting Book", HttpStatusCode.NotFound);
-            } else
+            }
+            else
                 throw new APIDataException(1, "No book found", HttpStatusCode.NotFound);
         }
 
 
 
-        protected JsonMediaTypeFormatter JsonFormatter {
-            get {
+        protected JsonMediaTypeFormatter JsonFormatter
+        {
+            get
+            {
                 var formatter = new JsonMediaTypeFormatter();
                 var json = formatter.SerializerSettings;
 

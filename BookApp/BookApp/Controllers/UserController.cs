@@ -18,14 +18,12 @@ namespace BookApp.Controllers
     [EnableCors(origins: "*", headers: "accept,Auth-Key", methods: "*")]
     public class UserController : ApiController
     {
-        private IBookRepository BookRepository;
         private IBookService BookService;
         private IUserService UserService;
 
         public UserController() {
         }
-        public UserController(IBookRepository bookRepository, IUserService userService, IBookService bookService) {
-            BookRepository = bookRepository;
+        public UserController(IUserService userService, IBookService bookService) {
             UserService = userService;
             BookService = bookService;
         }
@@ -97,48 +95,6 @@ namespace BookApp.Controllers
             } else
                 throw new APIDataException(4, "No user found", HttpStatusCode.NotFound);
         }
-
-        [HttpPost]
-        [Route("CreateUserBook")]
-        public HttpResponseMessage SaveBook([FromUri]Guid userId, [FromBody]Book book) {
-            if (book == null)
-                throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
-                    ErrorDescription = "Bad Request. Provide valid book object. Object can't be null.",
-                    HttpStatus = HttpStatusCode.BadRequest
-                };
-            if (userId == null || userId == Guid.Empty)
-                throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
-                    ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
-                    HttpStatus = HttpStatusCode.BadRequest
-                };
-            BookRepository.Add(book);
-            BookRepository.SaveChanges();
-            var result = BookRepository.GetBookByID(book.Id);
-            if (result != null)
-                return Request.CreateResponse(HttpStatusCode.OK, result, JsonFormatter);
-            else
-                throw new APIDataException(2, "Error Saving Book", HttpStatusCode.NotFound);
-        }
-
-        [HttpGet]
-        [Route("GetUserBooks")]
-        public HttpResponseMessage GetUserBooks(Guid userId) {
-            if (userId == null || userId == Guid.Empty)
-                throw new APIException() {
-                    ErrorCode = (int) HttpStatusCode.BadRequest,
-                    ErrorDescription = "Bad Request. Provide valid userId guid. Can't be empty guid.",
-                    HttpStatus = HttpStatusCode.BadRequest
-                };
-            var books = BookService.GetBooksByUserId(userId);
-            if (books != null)
-                return Request.CreateResponse(HttpStatusCode.OK, books, JsonFormatter);
-            else
-                throw new APIDataException(1, "No books found", HttpStatusCode.NotFound);
-        }
-
-
 
         protected JsonMediaTypeFormatter JsonFormatter {
             get {
