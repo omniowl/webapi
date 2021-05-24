@@ -1,3 +1,4 @@
+﻿using BookApp.Enums;
 using BookApp.Helper;
 using Interfaces.Repositories;
 using Interfaces.Services;
@@ -46,7 +47,7 @@ namespace BookApp.Controllers
             if (book != null)
                 return Request.CreateResponse(HttpStatusCode.OK, book, JsonFormatter);
             else
-                throw new APIDataException(1, "No book found", HttpStatusCode.NotFound);
+                throw new APIDataException((int)BookErrorCode.NoBookFound, "No book found", HttpStatusCode.NotFound);
         }
 
         /*
@@ -69,7 +70,7 @@ namespace BookApp.Controllers
             if (books != null)
                 return Request.CreateResponse(HttpStatusCode.OK, books, JsonFormatter);
             else
-                throw new APIDataException(1, "No books found", HttpStatusCode.NotFound);
+                throw new APIDataException((int)BookErrorCode.NoBookFound, "No books found", HttpStatusCode.NotFound);
         }
 
         [HttpPost]
@@ -86,7 +87,7 @@ namespace BookApp.Controllers
             if (book != null)
                 return Request.CreateResponse(HttpStatusCode.OK, book, JsonFormatter);
             else
-                throw new APIDataException(2, "Error Saving Book", HttpStatusCode.NotFound);
+                throw new APIDataException((int)BookErrorCode.ErrorSavingBook, "Error Saving Book", HttpStatusCode.NotFound);
         }
 
         /*
@@ -117,7 +118,7 @@ namespace BookApp.Controllers
             if (result != null)
                 return Request.CreateResponse(HttpStatusCode.OK, result, JsonFormatter);
             else
-                throw new APIDataException(2, "Error Saving Book", HttpStatusCode.NotFound);
+                throw new APIDataException((int)BookErrorCode.ErrorSavingBook, "Error Saving Book", HttpStatusCode.NotFound);
         }
 
         [HttpPut]
@@ -134,7 +135,7 @@ namespace BookApp.Controllers
             if (book != null)
                 return Request.CreateResponse(HttpStatusCode.OK, book, JsonFormatter);
             else
-                throw new APIDataException(3, "Error Updating Book", HttpStatusCode.NotFound);
+                throw new APIDataException((int)BookErrorCode.ErrorUpdatingBook, "Error Updating Book", HttpStatusCode.NotFound);
         }
 
         [HttpDelete] // This was HttpPost, now HttpDelete. Stays consistent with HTTP verb usage.
@@ -154,10 +155,10 @@ namespace BookApp.Controllers
                 if (result)
                     return Request.CreateResponse(HttpStatusCode.OK, "Book was deleted", JsonFormatter);
                 else
-                    throw new APIDataException(3, "Error Deleting Book", HttpStatusCode.NotFound);
+                    throw new APIDataException((int)BookErrorCode.ErrorDeletingBook, "Error Deleting Book", HttpStatusCode.NotFound);
             }
             else
-                throw new APIDataException(1, "No book found", HttpStatusCode.NotFound);
+                throw new APIDataException((int)BookErrorCode.NoBookFound, "No book found", HttpStatusCode.NotFound);
         }
 
         protected JsonMediaTypeFormatter JsonFormatter

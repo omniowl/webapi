@@ -1,4 +1,5 @@
-﻿using BookApp.Helper;
+﻿using BookApp.Enums;
+using BookApp.Helper;
 using Interfaces.Services;
 using Models.DomainModels;
 using Newtonsoft.Json;
@@ -38,7 +39,7 @@ namespace BookApp.Controllers
             if (user != null)
                 return Request.CreateResponse(HttpStatusCode.OK, user, JsonFormatter);
             else
-                throw new APIDataException(4, "No user found", HttpStatusCode.NotFound);
+                throw new APIDataException((int)UserErrorCode.NoUserFound, "No user found", HttpStatusCode.NotFound);
         }
 
         [HttpPost]
@@ -53,7 +54,7 @@ namespace BookApp.Controllers
             if (user != null)
                 return Request.CreateResponse(HttpStatusCode.OK, user, JsonFormatter);
             else
-                throw new APIDataException(5, "Error Saving User", HttpStatusCode.NotFound);
+                throw new APIDataException((int)UserErrorCode.ErrorSavingUser, "Error Saving User", HttpStatusCode.NotFound);
         }
 
         [HttpPut]
@@ -68,7 +69,7 @@ namespace BookApp.Controllers
             if (user != null)
                 return Request.CreateResponse(HttpStatusCode.OK, user, JsonFormatter);
             else
-                throw new APIDataException(6, "Error Updating User", HttpStatusCode.NotFound);
+                throw new APIDataException((int)UserErrorCode.ErrorUpdatingUser, "Error Updating User", HttpStatusCode.NotFound);
         }
 
         [HttpDelete] // This was HttpPost, now HttpDelete. Stays consistent with HTTP verb usage.
@@ -85,9 +86,9 @@ namespace BookApp.Controllers
                 if (result)
                     return Request.CreateResponse(HttpStatusCode.OK, "Book was deleted", JsonFormatter);
                 else
-                    throw new APIDataException(7, "Error Deleting User", HttpStatusCode.NotFound);
+                    throw new APIDataException((int)UserErrorCode.ErrorDeletingUser, "Error Deleting User", HttpStatusCode.NotFound);
             } else
-                throw new APIDataException(4, "No user found", HttpStatusCode.NotFound);
+                throw new APIDataException((int)UserErrorCode.NoUserFound, "No user found", HttpStatusCode.NotFound);
         }
 
         protected JsonMediaTypeFormatter JsonFormatter {
